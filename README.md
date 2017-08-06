@@ -2,6 +2,16 @@
 
 Deploy ownCloud easily.
 
+## Build
+
+````bash
+docker build -t brian32768/owncloud:9.1 -f 9.1/Dockerfile .
+docker build -t brian32768/owncloud:10.0 -f 10.0/Dockerfile .
+````
+
+VERSION 10 is not working for me yet, I get an error "composer autoloader not found"
+and version 9.1 is working for me so I am sticking with it for now.
+
 ## Setup
 
 The quickest way to get it up is:
