@@ -8,6 +8,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     apt-get update && \
     apt-get install -y cron bzip2 php-cli php-gd php-pgsql php-sqlite3 \
     php-mysqlnd php-curl php-intl php-mcrypt php-ldap php-gmp php-apcu \
+    php-simplexml php-zip php-mbstring \
     php-imagick php-fpm smbclient nginx supervisor && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -29,12 +30,13 @@ COPY supervisor-owncloud.conf /etc/supervisor/conf.d/supervisor-owncloud.conf
 COPY run.sh /usr/bin/run.sh
 COPY occ.sh /usr/bin/occ
 
+# Need this for php7
+RUN mkdir /run/php
+
 # Install ownCloud
 RUN mv /var/www/core-${OWNCLOUD_STABLE} /var/www/owncloud && \
-    rmdir /var/www/owncloud/3rdparty && \
-    mv /var/www/3rdparty-${OWNCLOUD_STABLE} /var/www/owncloud/3rdparty && \
-    chmod +x /usr/bin/run.sh && \
-    su -s /bin/sh www-data -c "crontab /etc/owncloud-cron.conf"
+    mv /var/www/3rdparty-${OWNCLOUD_STABLE}/* /var/www/owncloud/3rdparty
+RUN su -s /bin/sh www-data -c "crontab /etc/owncloud-cron.conf"
 
 EXPOSE 80 443
 
